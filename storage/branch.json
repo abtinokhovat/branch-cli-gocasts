@@ -1,0 +1,16 @@
+[
+  {
+    "Id": 1,
+    "Name": "Az",
+    "Phone": "09337378329",
+    "CreateDate": "2023-11-10",
+    "NumberOfEmployees": 10
+  },
+  {
+    "Id": 2,
+    "Name": "Abtin",
+    "Phone": "09337378329",
+    "CreateDate": "2024-11-10",
+    "NumberOfEmployees": 450
+  }
+]
