@@ -84,7 +84,7 @@ type TestData struct {
 func TestJsonSerializer_Deserialize(t *testing.T) {
 	jsonStr := `[{"name": "test1", "value": 42}, {"name": "test2", "value": 24}]`
 
-	serializer := io.NewJsonSerializer(&TestData{})
+	serializer := io.NewJsonSerializer[TestData](TestData{})
 
 	result, err := serializer.Deserialize(jsonStr)
 	if err != nil {
@@ -103,7 +103,7 @@ func TestJsonSerializer_Deserialize(t *testing.T) {
 	}
 
 	for i, expected := range expectedData {
-		if *result[i] != expected {
+		if result[i] != expected {
 			t.Errorf("Data mismatch at index %d, expected %v, got %v", i, expected, result[i])
 		}
 	}
