@@ -6,13 +6,18 @@ import (
 	"os"
 )
 
-type JsonReader[T any] interface {
+type FileReader[T any] interface {
 	Read() ([]T, error)
 }
 
-type JsonWriter[T any] interface {
-	WriteOne(data T) error
-	WriteMany(data []T) error
+type FileWriter[T any] interface {
+	WriteOne(data T, encoder *json.Encoder) error
+	WriteMany(data []T, encoder *json.Encoder) error
+}
+
+type FileIOHandler[T any] interface {
+	FileReader[T]
+	FileWriter[T]
 }
 
 type JsonIOHandler[T any] struct {
@@ -28,7 +33,7 @@ func NewJsonIOHandler[T any](path string, serializer Serializer[T]) *JsonIOHandl
 }
 
 func (h *JsonIOHandler[T]) openFile() (*os.File, error) {
-	file, err := os.Open(h.FilePath)
+	file, err := os.OpenFile(h.FilePath, os.O_RDWR, 0644)
 	if err != nil {
 		return nil, err
 	}
@@ -55,28 +60,51 @@ func (h *JsonIOHandler[T]) Read() ([]T, error) {
 	return deserialized, nil
 }
 
-func (h *JsonIOHandler[T]) WriteOne(data T, encoder *json.Encoder) error {
-	if err := encoder.Encode(data); err != nil {
+func (h *JsonIOHandler[T]) WriteOne(data T) error {
+	// reading data
+	content, err := h.Read()
+	if err != nil {
 		return err
 	}
-	return nil
-}
 
-func (h *JsonIOHandler[T]) WriteMany(data []T, encoder *json.Encoder) error {
-	for _, item := range data {
-		if err := h.WriteOne(item, encoder); err != nil {
-			return err
-		}
+	content = append(content, data)
+
+	// open file for writing
+	file, err := h.openFile()
+	if err != nil {
+		return err
 	}
+	defer file.Close()
+
+	// remove data
+	err = file.Truncate(0)
+	if err != nil {
+		return err
+	}
+
+	str, err := json.Marshal(data)
+	if err != nil {
+		return err
+	}
+	_, err = file.Write(str)
+	if err != nil {
+		return err
+	}
+
 	return nil
+
 }
 
-func (h *JsonIOHandler[T]) WriteOneToFile(data T, file *os.File) error {
-	encoder := json.NewEncoder(file)
-	return h.WriteOne(data, encoder)
-}
+func (h *JsonIOHandler[T]) DeleteAllData() error {
+	file, err := h.openFile()
+	if err != nil {
+		return err
+	}
+	defer file.Close()
 
-func (h *JsonIOHandler[T]) WriteManyToFile(data []T, file *os.File) error {
-	encoder := json.NewEncoder(file)
-	return h.WriteMany(data, encoder)
+	if err := file.Truncate(0); err != nil {
+		return err
+	}
+
+	return nil
 }
