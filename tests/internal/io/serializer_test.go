@@ -7,15 +7,6 @@ import (
 	"testing"
 )
 
-type testStructOne struct {
-	Prop1 int            `json:"prop_1"`
-	Prop2 string         `json:"prop_2"`
-	Prop3 []string       `json:"prop_3"`
-	Prop4 map[string]int `json:"prop_4"`
-	Prop5 float64        `json:"prop_5"`
-	Prop6 []int          `json:"prop_6"`
-}
-
 var (
 	data1 = testStructOne{
 		Prop1: 123,
@@ -54,6 +45,20 @@ var (
 	}
 )
 
+type testStructOne struct {
+	Prop1 int            `json:"prop_1"`
+	Prop2 string         `json:"prop_2"`
+	Prop3 []string       `json:"prop_3"`
+	Prop4 map[string]int `json:"prop_4"`
+	Prop5 float64        `json:"prop_5"`
+	Prop6 []int          `json:"prop_6"`
+}
+
+type testStructTwo struct {
+	Name  string `json:"name"`
+	Value int    `json:"value"`
+}
+
 func TestSerializer_Serialize(t *testing.T) {
 	s := io.NewJsonSerializer(&testStructOne{})
 
@@ -76,15 +81,10 @@ func TestSerializer_Serialize(t *testing.T) {
 
 }
 
-type TestData struct {
-	Name  string `json:"name"`
-	Value int    `json:"value"`
-}
-
 func TestJsonSerializer_Deserialize(t *testing.T) {
 	jsonStr := `[{"name": "test1", "value": 42}, {"name": "test2", "value": 24}]`
 
-	serializer := io.NewJsonSerializer[TestData](TestData{})
+	serializer := io.NewJsonSerializer[testStructTwo](testStructTwo{})
 
 	result, err := serializer.Deserialize(jsonStr)
 	if err != nil {
@@ -97,7 +97,7 @@ func TestJsonSerializer_Deserialize(t *testing.T) {
 		return
 	}
 
-	expectedData := []TestData{
+	expectedData := []testStructTwo{
 		{Name: "test1", Value: 42},
 		{Name: "test2", Value: 24},
 	}
@@ -112,7 +112,7 @@ func TestJsonSerializer_Deserialize(t *testing.T) {
 func TestJsonSerializer_Deserialize_Error(t *testing.T) {
 	jsonStr := `invalid-json`
 
-	serializer := io.NewJsonSerializer(&TestData{})
+	serializer := io.NewJsonSerializer(&testStructTwo{})
 
 	_, err := serializer.Deserialize(jsonStr)
 	if err == nil {
