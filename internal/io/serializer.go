@@ -32,6 +32,9 @@ func (s *JsonSerializer[T]) Serialize(data T) (string, error) {
 
 func (s *JsonSerializer[T]) Deserialize(jsonString string) ([]T, error) {
 	var objects []T
+	if len(jsonString) == 0 {
+		return objects, nil
+	}
 	err := json.Unmarshal([]byte(jsonString), &objects)
 	if err != nil {
 		return nil, err
