@@ -11,8 +11,9 @@ type FileReader[T any] interface {
 }
 
 type FileWriter[T any] interface {
-	WriteOne(data T, encoder *json.Encoder) error
-	WriteMany(data []T, encoder *json.Encoder) error
+	WriteOne(data T) error
+	DeleteAll() error
+	DeleteAndWrite(data []T) error
 }
 
 type FileIOHandler[T any] interface {
@@ -69,6 +70,15 @@ func (h *JsonIOHandler[T]) WriteOne(data T) error {
 
 	content = append(content, data)
 
+	err = h.DeleteAndWrite(content)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (h *JsonIOHandler[T]) DeleteAndWrite(data []T) error {
 	// open file for writing
 	file, err := h.openFile()
 	if err != nil {
@@ -92,10 +102,9 @@ func (h *JsonIOHandler[T]) WriteOne(data T) error {
 	}
 
 	return nil
-
 }
 
-func (h *JsonIOHandler[T]) DeleteAllData() error {
+func (h *JsonIOHandler[T]) DeleteAll() error {
 	file, err := h.openFile()
 	if err != nil {
 		return err
