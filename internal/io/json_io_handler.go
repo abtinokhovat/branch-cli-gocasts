@@ -22,6 +22,7 @@ type FileIOHandler[T any] interface {
 }
 
 type JsonIOHandler[T any] struct {
+	FileIOHandler[T]
 	FilePath   string
 	serializer Serializer[T]
 }
@@ -41,6 +42,7 @@ func (h *JsonIOHandler[T]) openFile() (*os.File, error) {
 	return file, nil
 }
 
+// Should read a file and return the data in file with type of data
 func (h *JsonIOHandler[T]) Read() ([]T, error) {
 	file, err := h.openFile()
 	if err != nil {
@@ -92,6 +94,7 @@ func (h *JsonIOHandler[T]) DeleteAndWrite(data []T) error {
 		return err
 	}
 
+	// TODO: change json.Marshal to h.serialize.Deserialize
 	str, err := json.Marshal(data)
 	if err != nil {
 		return err
