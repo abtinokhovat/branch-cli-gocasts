@@ -56,44 +56,46 @@ func TestJsonIOHandler_WriteOne(t *testing.T) {
 		{
 			name:     "ordinary data",
 			data:     testStructTwo{Name: "test1", Value: 42},
-			expected: `{"name":"test1","value":42}`,
+			expected: `[{"name":"test1","value":42}]`,
 		},
 		{
 			name:     "empty data",
 			data:     testStructTwo{},
-			expected: `{"name":"","value":0}`,
+			expected: `[{"name":"","value":0}]`,
 		},
 	}
 
 	for _, tc := range testCases {
-		tempFile, err := createTempFile("")
-		if err != nil {
-			t.Fatal(err)
-		}
-		defer tempFile.Close()
-		defer os.Remove(tempFile.Name())
+		t.Run(tc.name, func(t *testing.T) {
+			tempFile, err := createTempFile("")
+			if err != nil {
+				t.Fatal(err)
+			}
+			defer tempFile.Close()
+			defer os.Remove(tempFile.Name())
 
-		// act
-		serializer := io.NewJsonSerializer[testStructTwo](testStructTwo{})
-		handler := io.NewJsonIOHandler[testStructTwo](tempFile.Name(), serializer)
+			// act
+			serializer := io.NewJsonSerializer[testStructTwo](testStructTwo{})
+			handler := io.NewJsonIOHandler[testStructTwo](tempFile.Name(), serializer)
 
-		err = handler.WriteOne(tc.data.(testStructTwo))
-		if err != nil {
-			t.Errorf("%v", err)
-			return
-		}
+			err = handler.WriteOne(tc.data.(testStructTwo))
+			if err != nil {
+				t.Errorf("%v", err)
+				return
+			}
 
-		// assert
-		content, err := io2.ReadAll(tempFile)
-		if err != nil {
-			t.Errorf("%v", err)
-			return
-		}
+			// assert
+			content, err := io2.ReadAll(tempFile)
+			if err != nil {
+				t.Errorf("%v", err)
+				return
+			}
 
-		if string(content) != tc.expected {
-			t.Errorf("Expected %s, got %s", tc.expected, content)
-			return
-		}
+			if string(content) != tc.expected {
+				t.Errorf("Expected %s, got %s", tc.expected, content)
+				return
+			}
+		})
 	}
 }
 
