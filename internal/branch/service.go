@@ -12,6 +12,30 @@ func NewBranchService(adp StorageAdapter) *Service {
 	}
 }
 
+func (s *Service) NewId() (int, error) {
+	branches, err := s.adp.GetAll()
+	if err != nil {
+		return -1, err
+	}
+
+	var max int
+	// get max id
+	for _, brn := range branches {
+		if brn.Id > max {
+			max = brn.Id
+		}
+	}
+
+	return max + 1, err
+}
+func (s *Service) GetAllBranches() ([]Branch, error) {
+	branches, err := s.adp.GetAll()
+	if err != nil {
+		return nil, err
+	}
+
+	return branches, nil
+}
 func (s *Service) ListBranchesInRegion(region region.Region) ([]Branch, error) {
 	branches, err := s.adp.GetAll()
 	if err != nil {
