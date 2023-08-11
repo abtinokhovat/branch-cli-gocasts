@@ -13,21 +13,45 @@ func NewBranchService(adp StorageAdapter) *Service {
 }
 
 func (s *Service) ListBranchesInRegion(region region.Region) ([]Branch, error) {
-	// Implement the logic to list branches in a specific region
-	panic("implement ListBranchesInRegion")
+	branches, err := s.adp.GetAll()
+	if err != nil {
+		return nil, err
+	}
+
+	var filteredBranches []Branch
+
+	for _, brn := range branches {
+		if brn.RegionId == region.Id {
+			filteredBranches = append(filteredBranches, brn)
+		}
+	}
+
+	return filteredBranches, nil
 }
 
 func (s *Service) GetBranchDetail(id int) (*Branch, error) {
-	// Implement the logic to get branch details by ID
-	panic("implement GetBranchDetail")
+	brn, err := s.adp.GetById(id)
+	if err != nil {
+		return nil, err
+	}
+
+	return brn, nil
 }
 
 func (s *Service) CreateBranch(branch *Branch) error {
-	// Implement the logic to create a new branch
-	panic("implement CreateBranch")
+	err := s.adp.Create(branch)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s *Service) EditBranch(branch *Branch) error {
-	// Implement the logic to edit a branch
-	panic("implement EditBranch")
+	err := s.adp.UpdateById(branch)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
