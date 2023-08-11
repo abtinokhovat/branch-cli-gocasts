@@ -6,6 +6,10 @@ type Service struct {
 	adp StorageAdapter
 }
 
+func BuildService() *Service {
+	repo := BuildRepository()
+	return NewBranchService(repo)
+}
 func NewBranchService(adp StorageAdapter) *Service {
 	return &Service{
 		adp: adp,
@@ -52,7 +56,6 @@ func (s *Service) ListBranchesInRegion(region region.Region) ([]Branch, error) {
 
 	return filteredBranches, nil
 }
-
 func (s *Service) GetBranchDetail(id int) (*Branch, error) {
 	brn, err := s.adp.GetById(id)
 	if err != nil {
@@ -61,7 +64,6 @@ func (s *Service) GetBranchDetail(id int) (*Branch, error) {
 
 	return brn, nil
 }
-
 func (s *Service) CreateBranch(branch *Branch) error {
 	err := s.adp.Create(branch)
 	if err != nil {
@@ -70,7 +72,6 @@ func (s *Service) CreateBranch(branch *Branch) error {
 
 	return nil
 }
-
 func (s *Service) EditBranch(branch *Branch) error {
 	err := s.adp.UpdateById(branch)
 	if err != nil {

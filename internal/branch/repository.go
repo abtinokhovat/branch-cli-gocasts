@@ -11,11 +11,15 @@ type StorageAdapter interface {
 	Create(*Branch) error
 	UpdateById(*Branch) error
 }
-
 type Repository struct {
 	manipulator io.FileIOHandler[Branch]
 }
 
+func BuildRepository() *Repository {
+	serializer := io.NewJsonSerializer[Branch](Branch{})
+	handler := io.NewJsonIOHandler[Branch](StoragePath, serializer)
+	return NewRepository(handler)
+}
 func NewRepository(handler io.FileIOHandler[Branch]) *Repository {
 	return &Repository{
 		manipulator: handler,
@@ -36,7 +40,6 @@ func (r *Repository) GetById(id int) (*Branch, error) {
 
 	return nil, errors.New("branch Not Found")
 }
-
 func (r *Repository) GetAll() ([]Branch, error) {
 	branches, err := r.manipulator.Read()
 	if err != nil {
@@ -45,7 +48,6 @@ func (r *Repository) GetAll() ([]Branch, error) {
 
 	return branches, nil
 }
-
 func (r *Repository) Create(branch *Branch) error {
 	err := r.manipulator.WriteOne(*branch)
 	if err != nil {
@@ -53,7 +55,6 @@ func (r *Repository) Create(branch *Branch) error {
 	}
 	return nil
 }
-
 func (r *Repository) UpdateById(branch *Branch) error {
 	values, err := r.GetAll()
 
