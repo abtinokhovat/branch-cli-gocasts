@@ -1,5 +1,7 @@
 package branch
 
+import "fmt"
+
 const StoragePath = "storage/branch.json"
 
 type Branch struct {
@@ -20,4 +22,14 @@ func New(id int, name string, phone string, createDate string, numberOfEmployees
 		NumberOfEmployees: numberOfEmployees,
 		RegionId:          regionId,
 	}
+}
+
+func (b *Branch) String() string {
+	result := fmt.Sprintf("\033[33m#️⃣%d-%s\033[0m\n---------------\n☎️:%s\n🚻:%d\n🗻:%d\n📅:%s",
+		b.Id, b.Name,
+		b.Phone,
+		b.NumberOfEmployees,
+		b.RegionId,
+		b.CreateDate)
+	return result
 }
