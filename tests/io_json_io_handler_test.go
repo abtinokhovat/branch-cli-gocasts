@@ -1,4 +1,4 @@
-package io
+package tests
 
 import (
 	"branches-cli/internal/io"
@@ -15,7 +15,7 @@ type testStruct struct {
 }
 
 var (
-	testData = []testStruct{
+	testDataHandler = []testStruct{
 		{
 			Name:  "David",
 			Age:   40,
@@ -173,7 +173,7 @@ func TestJsonIOHandler_DeleteAndWrite(t *testing.T) {
 		handler := io.NewJsonIOHandler[testStruct](file.Name(), serializer)
 
 		// 2. execution
-		err = handler.DeleteAndWrite(testData)
+		err = handler.DeleteAndWrite(testDataHandler)
 		if err != nil {
 			t.Fatalf("Error on DeleteAndWrite: %s", err)
 		}
@@ -192,7 +192,7 @@ func TestJsonIOHandler_DeleteAndWrite(t *testing.T) {
 		handler := io.NewJsonIOHandler[testStruct]("non_existent_file.json", serializer)
 
 		// 2. execution
-		err := handler.DeleteAndWrite(testData)
+		err := handler.DeleteAndWrite(testDataHandler)
 
 		// 3. assertion
 		if err == nil {

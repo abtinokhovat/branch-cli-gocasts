@@ -1,4 +1,4 @@
-package branch_test
+package tests
 
 import (
 	"branches-cli/internal/branch"

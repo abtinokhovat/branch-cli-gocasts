@@ -1,4 +1,4 @@
-package io
+package tests_test
 
 import (
 	"branches-cli/internal/io"
