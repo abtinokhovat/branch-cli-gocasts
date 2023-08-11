@@ -40,7 +40,7 @@ func (s *Service) GetAllBranches() ([]Branch, error) {
 
 	return branches, nil
 }
-func (s *Service) ListBranchesInRegion(region region.Region) ([]Branch, error) {
+func (s *Service) ListBranchesInRegion(region *region.Region) ([]Branch, error) {
 	branches, err := s.adp.GetAll()
 	if err != nil {
 		return nil, err

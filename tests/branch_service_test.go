@@ -66,7 +66,7 @@ func TestService_ListBranchesInRegion(t *testing.T) {
 		service := branch.NewBranchService(mockRepo)
 
 		// 2. execution
-		branches, err := service.ListBranchesInRegion(region.Region{Id: 1})
+		branches, err := service.ListBranchesInRegion(&region.Region{Id: 1})
 		assert.NoError(t, err, "Error listing branches in region")
 
 		// 3. assertion
