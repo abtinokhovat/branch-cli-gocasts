@@ -1,16 +1,1 @@
-[
-  {
-    "Id": 1,
-    "Name": "Az",
-    "Phone": "09337378329",
-    "CreateDate": "2023-11-10",
-    "NumberOfEmployees": 10
-  },
-  {
-    "Id": 2,
-    "Name": "Abtin",
-    "Phone": "09337378329",
-    "CreateDate": "2024-11-10",
-    "NumberOfEmployees": 450
-  }
-]
+[{"id":1,"name":"Az","phone":"09337378329","createDate":"2023-11-10","numberOfEmployees":10,"regionId":1},{"id":2,"name":"Abtin","phone":"09121158517","createDate":"2024-11-10","numberOfEmployees":112,"regionId":1},{"id":3,"name":"Tehran-Main","phone":"02122391821","createDate":"2023-08-11 20:59:00.074413 +0330 +0330 m=+26.132452043","numberOfEmployees":129,"regionId":1},{"id":4,"name":"MainBase","phone":"223344","createDate":"2023-08-11 21:36:19.677012 +0330 +0330 m=+6.078170710","numberOfEmployees":1344,"regionId":1}]
