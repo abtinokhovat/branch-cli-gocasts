@@ -29,7 +29,10 @@ func (c *Command) ListBranches() {
 	if err != nil {
 		return
 	}
-	fmt.Println(branches)
+	for _, brn := range branches {
+		fmt.Printf("\n===============\n")
+		fmt.Println(brn.String())
+	}
 }
 func (c *Command) GetBranch() {
 	str := c.scan("Enter the id of the branch:")
@@ -45,7 +48,7 @@ func (c *Command) GetBranch() {
 	}
 
 	if brn != nil {
-		fmt.Println(brn)
+		fmt.Println(brn.String())
 	} else {
 		fmt.Printf("Branch:#%d not found\n", id)
 	}
@@ -87,19 +90,30 @@ func (c *Command) EditBranch(region *region.Region) {
 
 }
 func (c *Command) GiveStatus(region *region.Region) {
-	branches, err := c.branchService.ListBranchesInRegion(*region)
+	branches, err := c.branchService.ListBranchesInRegion(region)
 	if err != nil {
 		fmt.Sprintln(err)
 	}
 
-	numOfBranches := len(branches) + 1
+	var numOfBranches int
+	if branches != nil {
+		numOfBranches = len(branches) + 1
+	} else {
+		numOfBranches = 0
+	}
 
 	var sumNumOfEmp int
 	for _, b := range branches {
 		sumNumOfEmp += b.NumberOfEmployees
 	}
 
-	fmt.Printf("Number of branches: %d, and the number of employees working on them are a total of %d", numOfBranches, sumNumOfEmp)
+	fmt.Printf(
+		"#️⃣%d-%s\n----------------\nNumber of branches: %d, and the number of employees working on them are a total of %d",
+		region.Id,
+		region.Name,
+		numOfBranches,
+		sumNumOfEmp,
+	)
 }
 func (c *Command) Execute(command string, regionIdStr string) {
 	id, err := strconv.Atoi(regionIdStr)

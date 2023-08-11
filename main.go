@@ -24,7 +24,7 @@ func main() {
 	fmt.Println("Written by ABTIN OKHOVAT")
 
 	com := flag.String("command", "status", "Command name that can be executed")
-	reg := flag.String("reg", "Tehran", "the city that you want to retrieve the data of branches from")
+	reg := flag.String("region", "1", "the city that you want to retrieve the data of branches from")
 	flag.Parse()
 
 	// setup
