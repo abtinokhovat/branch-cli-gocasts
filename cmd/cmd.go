@@ -87,7 +87,56 @@ func (c *Command) CreateBranch(region *region.Region) {
 	fmt.Printf("Branch #%d Created: %v", id, b)
 }
 func (c *Command) EditBranch(region *region.Region) {
+	idStr := c.scan("Enter the id of the branch you want to edit:")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
+	brn, err := c.branchService.GetBranchDetail(id)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	if brn == nil {
+		fmt.Printf("Branch #%d not found\n", id)
+		return
+	}
+
+	// Prompt user for updated information
+	name := c.scan("Enter the new Name of the branch:")
+	phone := c.scan("Enter the new Phone of the branch:")
+	numOfEmpStr := c.scan("Enter the new Number of employees in the branch:")
+	var numOfEmp int
+	if numOfEmpStr != "" {
+		numOfEmp, err = strconv.Atoi(numOfEmpStr)
+	} else {
+		numOfEmp = -1
+	}
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	// Update branch details
+	brn.Name = name
+	brn.Phone = phone
+	brn.NumberOfEmployees = numOfEmp
+	brn.RegionId = region.Id
+
+	err = c.branchService.EditBranch(brn)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	detail, err := c.branchService.GetBranchDetail(id)
+	if err != nil {
+		return
+	}
+
+	fmt.Printf("Branch #%d Updated:\n%s\n", id, detail.String())
 }
 func (c *Command) GiveStatus(region *region.Region) {
 	branches, err := c.branchService.ListBranchesInRegion(region)
