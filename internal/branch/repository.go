@@ -64,7 +64,19 @@ func (r *Repository) UpdateById(branch *Branch) error {
 
 	for i, value := range values {
 		if value.Id == branch.Id {
-			values[i] = *branch
+			if branch.Name != "" {
+				values[i].Name = branch.Name
+			}
+			if branch.Phone != "" {
+				values[i].Phone = branch.Phone
+			}
+			if branch.NumberOfEmployees > 0 {
+				values[i].NumberOfEmployees = branch.NumberOfEmployees
+			}
+			if branch.RegionId > 0 {
+				values[i].RegionId = branch.RegionId
+			}
+			//values[i] = *branch
 		}
 	}
 
