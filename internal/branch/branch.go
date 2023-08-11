@@ -1,8 +1,6 @@
 package branch
 
-import "branches-cli/internal/region"
-
-const filePath = "storage/branch.json"
+const StoragePath = "storage/branch.json"
 
 type Branch struct {
 	Id                int    `json:"id"`
@@ -13,13 +11,13 @@ type Branch struct {
 	RegionId          int    `json:"regionId"`
 }
 
-func NewBranch(id int, name string, phone string, createDate string, numberOfEmployees int, region region.Region) *Branch {
+func New(id int, name string, phone string, createDate string, numberOfEmployees int, regionId int) *Branch {
 	return &Branch{
 		Id:                id,
 		Name:              name,
 		Phone:             phone,
 		CreateDate:        createDate,
 		NumberOfEmployees: numberOfEmployees,
-		RegionId:          region.Id,
+		RegionId:          regionId,
 	}
 }
