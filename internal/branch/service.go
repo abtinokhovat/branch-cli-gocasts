@@ -30,7 +30,7 @@ func (s *Service) NewId() (int, error) {
 		}
 	}
 
-	return max + 1, err
+	return max + 1, nil
 }
 func (s *Service) GetAllBranches() ([]Branch, error) {
 	branches, err := s.adp.GetAll()
