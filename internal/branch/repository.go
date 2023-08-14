@@ -1,8 +1,9 @@
 package branch
 
 import (
-	"branches-cli/internal/io"
 	"errors"
+
+	io "github.com/abtinokhovat/file-handler-go"
 )
 
 type StorageAdapter interface {
