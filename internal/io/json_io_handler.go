@@ -1,7 +1,6 @@
 package io
 
 import (
-	"encoding/json"
 	"io"
 	"os"
 )
@@ -94,12 +93,11 @@ func (h *JsonIOHandler[T]) DeleteAndWrite(data []T) error {
 		return err
 	}
 
-	// TODO: change json.Marshal to h.serialize.Deserialize
-	str, err := json.Marshal(data)
+	str, err := h.serializer.SerializeMany(data)
 	if err != nil {
 		return err
 	}
-	_, err = file.Write(str)
+	_, err = file.WriteString(str)
 	if err != nil {
 		return err
 	}

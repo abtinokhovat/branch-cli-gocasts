@@ -2,7 +2,9 @@ package tests
 
 import (
 	"branches-cli/internal/io"
+	"bytes"
 	"fmt"
+	"github.com/stretchr/testify/assert"
 	io2 "io"
 	"os"
 	"testing"
@@ -32,7 +34,7 @@ var (
 			Likes: []int{7, 19},
 		},
 	}
-	testDataString = `[{"Name":"David","Age":40,"Likes":[15,23,35]},{"Name":"Eve","Age":22,"Likes":[12,28,44,72]},{"Name":"Frank","Age":31,"Likes":[7,19]}]`
+	testDataString = `[{"Name":"David","Age":40,"Likes":[15 23 35]},{"Name":"Eve","Age":22,"Likes":[12 28 44 72]},{"Name":"Frank","Age":31,"Likes":[7 19]}]`
 )
 
 type MockSerializer struct {
@@ -42,6 +44,23 @@ type MockSerializer struct {
 func (s MockSerializer) Serialize(data testStruct) (string, error) {
 	return fmt.Sprintf("{ Name: %s, Age: %d, Likes: %v }", data.Name, data.Age, data.Likes), nil
 }
+
+func (s MockSerializer) SerializeMany(data []testStruct) (string, error) {
+	var buff bytes.Buffer
+	// first of the string
+	buff.WriteRune('[')
+	for i, value := range data {
+		buff.WriteString(fmt.Sprintf(`{"Name":"%s","Age":%d,"Likes":%v}`, value.Name, value.Age, value.Likes))
+		if i != len(data)-1 {
+			buff.WriteRune(',')
+		}
+	}
+
+	// write the end of the json file
+	buff.WriteRune(']')
+	return buff.String(), nil
+}
+
 func (s MockSerializer) Deserialize(jsonString string) ([]testStruct, error) {
 	var testData []testStruct
 
@@ -177,13 +196,11 @@ func TestJsonIOHandler_DeleteAndWrite(t *testing.T) {
 		if err != nil {
 			t.Fatalf("Error on DeleteAndWrite: %s", err)
 		}
-
-		// 3. assertion
 		_, _ = file.Seek(0, 0)
 		afterDelete, err := io2.ReadAll(file)
-		if string(afterDelete) != testDataString {
-			t.Fatalf("Falied to delete and rewrite the content\nDeleteAndWrite: %s,\n data: %v", err, afterDelete)
-		}
+
+		// 3. assertion
+		assert.Equal(t, testDataString, string(afterDelete), fmt.Sprintf("Falied to delete and rewrite the content\nDeleteAndWrite: %s,\n data: %v", err, afterDelete))
 	})
 
 	t.Run("not_valid_file", func(t *testing.T) {
