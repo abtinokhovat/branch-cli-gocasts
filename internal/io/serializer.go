@@ -14,9 +14,9 @@ type JsonSerializer[T any] struct {
 	structure T
 }
 
-func NewJsonSerializer[T any](structure T) *JsonSerializer[T] {
+func NewJsonSerializer[T any]() *JsonSerializer[T] {
 	return &JsonSerializer[T]{
-		structure: structure,
+		structure: *new(T),
 	}
 }
 

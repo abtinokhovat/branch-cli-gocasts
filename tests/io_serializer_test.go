@@ -4,6 +4,7 @@ import (
 	"branches-cli/internal/io"
 	"bytes"
 	"encoding/json"
+	"errors"
 	"testing"
 )
 
@@ -60,14 +61,14 @@ type testStructTwo struct {
 }
 
 func TestSerializer_Serialize(t *testing.T) {
-	s := io.NewJsonSerializer(&testStructOne{})
+	s := io.NewJsonSerializer[testStructOne]()
 
 	var buffer bytes.Buffer
 	encoder := json.NewEncoder(&buffer)
 
 	for _, tc := range testCases {
 		_ = encoder.Encode(tc.data)
-		jsonString, err := s.Serialize(&tc.data)
+		jsonString, err := s.Serialize(tc.data)
 		if err != nil {
 			t.Errorf("Error while serializing:\n %s", err)
 		}
@@ -84,7 +85,7 @@ func TestSerializer_Serialize(t *testing.T) {
 func TestJsonSerializer_Deserialize(t *testing.T) {
 	jsonStr := `[{"name": "test1", "value": 42}, {"name": "test2", "value": 24}]`
 
-	serializer := io.NewJsonSerializer[testStructTwo](testStructTwo{})
+	serializer := io.NewJsonSerializer[testStructTwo]()
 
 	result, err := serializer.Deserialize(jsonStr)
 	if err != nil {
@@ -112,7 +113,7 @@ func TestJsonSerializer_Deserialize(t *testing.T) {
 func TestJsonSerializer_Deserialize_Error(t *testing.T) {
 	jsonStr := `invalid-json`
 
-	serializer := io.NewJsonSerializer(&testStructTwo{})
+	serializer := io.NewJsonSerializer[testStructTwo]()
 
 	_, err := serializer.Deserialize(jsonStr)
 	if err == nil {
@@ -121,7 +122,8 @@ func TestJsonSerializer_Deserialize_Error(t *testing.T) {
 	}
 
 	// Optionally check the specific error here
-	if _, ok := err.(*json.SyntaxError); !ok {
+	var syntaxError *json.SyntaxError
+	if !errors.As(err, &syntaxError) {
 		t.Errorf("Expected a syntax error, but got %T", err)
 	}
 }

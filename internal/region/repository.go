@@ -15,7 +15,7 @@ type Repository struct {
 }
 
 func BuildRepository() *Repository {
-	serializer := io.NewJsonSerializer[Region](Region{})
+	serializer := io.NewJsonSerializer[Region]()
 	handler := io.NewJsonIOHandler[Region](StoragePath, serializer)
 	return NewRepository(handler)
 }
