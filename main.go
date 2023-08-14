@@ -2,6 +2,7 @@ package main
 
 import (
 	"branches-cli/cmd"
+	"branches-cli/config"
 	"branches-cli/internal/branch"
 	"branches-cli/internal/region"
 	"bufio"
@@ -23,8 +24,8 @@ func main() {
 
 	fmt.Println("Written by ABTIN OKHOVAT")
 
-	com := flag.String("command", "status", "Command name that can be executed")
-	reg := flag.String("region", "1", "the city that you want to retrieve the data of branches from")
+	com := flag.String(config.Command.Name, config.Command.Default, config.Command.Description)
+	reg := flag.String(config.Region.Name, config.Region.Default, config.Region.Description)
 	flag.Parse()
 
 	// setup
