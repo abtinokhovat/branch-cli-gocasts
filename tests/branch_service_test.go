@@ -76,7 +76,7 @@ func TestService_ListBranchesInRegion(t *testing.T) {
 func TestService_GetBranchDetail(t *testing.T) {
 	t.Run("ordinary", func(t *testing.T) {
 		// 1. setup
-		mockRepo := &MockBranchRepository{}
+		mockRepo := new(MockBranchRepository)
 		service := branch.NewBranchService(mockRepo)
 
 		// 2. execution
@@ -90,7 +90,7 @@ func TestService_GetBranchDetail(t *testing.T) {
 func TestService_CreateBranch(t *testing.T) {
 	t.Run("ordinary", func(t *testing.T) {
 		// 1. setup
-		mockRepo := &MockBranchRepository{}
+		mockRepo := new(MockBranchRepository)
 		service := branch.NewBranchService(mockRepo)
 
 		newBranch := &branch.Branch{Id: 4, Name: "New Branch", RegionId: 3}
@@ -125,6 +125,7 @@ func TestService_EditBranch(t *testing.T) {
 			},
 		},
 	}
+
 	for _, tc := range testStruct {
 		t.Run(tc.name, func(t *testing.T) {
 			// 1. setup
@@ -139,5 +140,4 @@ func TestService_EditBranch(t *testing.T) {
 			assert.Equal(t, storage[tc.data.Id-1], *tc.data, fmt.Sprintf("%s failed", tc.name))
 		})
 	}
-
 }
