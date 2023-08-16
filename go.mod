@@ -3,7 +3,7 @@ module branches-cli
 go 1.20
 
 require (
-	github.com/abtinokhovat/file-handler-go v0.1.0
+	github.com/abtinokhovat/file-handler-go v0.1.1
 	github.com/stretchr/testify v1.8.4
 )
 
