@@ -167,12 +167,12 @@ func (c *Command) GiveStatus(region *region.Region) {
 func (c *Command) Execute(command string, regionIdStr string) {
 	id, err := strconv.Atoi(regionIdStr)
 	if err != nil {
-		fmt.Sprintln(err)
+		fmt.Println(err)
 	}
 
 	r, err := c.regionService.GetRegionDetail(id)
 	if err != nil {
-		fmt.Sprintln(err)
+		fmt.Println(err)
 	}
 
 	switch command {

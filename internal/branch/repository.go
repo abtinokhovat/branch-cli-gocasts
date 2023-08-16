@@ -39,7 +39,7 @@ func (r *Repository) GetById(id int) (*Branch, error) {
 		}
 	}
 
-	return nil, errors.New("branch Not Found")
+	return nil, errors.New("branch not found")
 }
 func (r *Repository) GetAll() ([]Branch, error) {
 	branches, err := r.manipulator.Read()
