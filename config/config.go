@@ -9,12 +9,12 @@ type CommandConfig struct {
 var (
 	Region = CommandConfig{
 		Name:        "region",
-		Default:     "Tehran",
+		Default:     "1",
 		Description: "The city that you want to retrieve the data of branches from",
 	}
 	Command = CommandConfig{
 		Name:        "command",
-		Default:     "exit",
+		Default:     "status",
 		Description: "Command name that can be executed",
 	}
 )

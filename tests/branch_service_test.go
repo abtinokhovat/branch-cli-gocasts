@@ -73,7 +73,6 @@ func TestService_ListBranchesInRegion(t *testing.T) {
 		assert.Len(t, branches, 2, "Unexpected number of branches")
 	})
 }
-
 func TestService_GetBranchDetail(t *testing.T) {
 	t.Run("ordinary", func(t *testing.T) {
 		// 1. setup
@@ -88,7 +87,6 @@ func TestService_GetBranchDetail(t *testing.T) {
 		assert.Equal(t, "Branch 2", brn.Name, "Unexpected branch name")
 	})
 }
-
 func TestService_CreateBranch(t *testing.T) {
 	t.Run("ordinary", func(t *testing.T) {
 		// 1. setup
@@ -105,7 +103,6 @@ func TestService_CreateBranch(t *testing.T) {
 		assert.Len(t, storage, 4, "Unexpected number of branches in storage")
 	})
 }
-
 func TestService_EditBranch(t *testing.T) {
 	testStruct := []struct {
 		name string
