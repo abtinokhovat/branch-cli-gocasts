@@ -6,6 +6,8 @@ import (
 	io "github.com/abtinokhovat/file-handler-go"
 )
 
+var defaultBranch = Region{1, "Tehran"}
+
 type StorageAdapter interface {
 	GetAll() ([]Region, error)
 	GetById(id int) (*Region, error)
@@ -21,6 +23,12 @@ func BuildRepository() *Repository {
 	return NewRepository(handler)
 }
 func NewRepository(handler io.FileIOHandler[Region]) *Repository {
+	// handling empty region list
+	data, _ := handler.Read()
+	if len(data) == 0 {
+		_ = handler.WriteOne(defaultBranch)
+	}
+
 	return &Repository{
 		manipulator: handler,
 	}
@@ -46,5 +54,5 @@ func (r *Repository) GetById(id int) (*Region, error) {
 		}
 	}
 
-	return nil, errors.New("branch Not Found")
+	return nil, errors.New("region not found")
 }
